@@ -1,0 +1,17 @@
+@import './_reset.less';
+@import './_weui-reset.less';
+
+// 兼容vm单位下img图片在ios中不显示问题
+img {
+    content: normal !important;
+}
+
+.shadow {
+    box-shadow: 10px 10px 5px rgba(#d8d8d8, 0.5);
+}
+
+.no-before {
+    &::before {
+        display: none;
+    }
+}

@@ -1,0 +1,107 @@
+.weui-dialog {
+
+    .weui-dialog__hd {
+        font-size: 34px;
+        color: #000000;
+
+        strong {
+            font-size: inherit;
+        }
+    }
+
+    .weui-dialog__bd {
+        min-height: initial;
+    }
+
+    .weui-dialog__ft {
+        line-height: 100px;
+    }
+}
+
+.weui-picker {
+    font-size: 32px;
+    // .weui-picker__bd {// }
+}
+
+.weui-input {
+    width: auto;
+
+    &[disabled] {
+        color: #666;
+    }
+}
+
+.weui-toast {
+    font-size: 14px;
+    width: 240px;
+    min-height: 240px;
+    margin-left: -120px;
+}
+
+// weui的覆盖样式
+a {
+    color: @theme-color;
+}
+
+// weui-cells
+.weui-cells__title {
+    padding-top: 15px;
+    padding-bottom: 10px;
+    margin: 0;
+    font-size: 24px;
+    color: rgba(#3d3d45, 0.4);
+}
+
+.weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before {
+    color: @theme-color;
+}
+
+.weui-cells {
+    font-size: 34px;
+}
+
+.weui-cell {
+    padding: 20px 30px;
+    box-sizing: border-box;
+
+    &::before {
+        // content: '' !important;
+    }
+
+    &.weui-cell_access .weui-cell__ft:after {
+        // content: '' !important;
+        height: 10px;
+        width: 10px;
+        border-width: 3px 3px 0 0;
+        border-color: #3f4659;
+    }
+}
+
+// button
+button.weui-btn_block {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.weui-btn_primary {
+    background-color: @theme-color;
+
+    &.weui-btn_disabled {
+        color: @col-fff;
+        background-color: @theme-color;
+        opacity: 0.5;
+    }
+
+    &.weui-btn_loading {
+        background-color: @theme-color;
+    }
+
+    &:not(.weui-btn_disabled):visited {
+        color: @col-fff;
+    }
+
+    &:not(.weui-btn_disabled):active {
+        color: darken(@col-fff, 5%);
+        background-color: darken(@theme-color, 5%);
+    }
+}

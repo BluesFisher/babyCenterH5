@@ -1,0 +1,4 @@
+exports.timeReport = {
+    proj: '',
+    url: ''
+};

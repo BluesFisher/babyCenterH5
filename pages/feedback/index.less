@@ -1,0 +1,74 @@
+.feedback-container {
+    height: 100%;
+    width: 100%;
+    background: #f5f5f5;
+    padding-bottom: 20px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .feed-back-title {
+        font-size: 28px;
+        color: #aaa;
+        padding: 20px;
+    }
+
+    .feed-back-type {
+        font-size: 28px;
+
+        .feed-back-type-items {
+            width: 100%;
+            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 40px 20px;
+            padding-bottom: 0;
+
+            .type-item {
+                text-align: center;
+                margin-right: 4%;
+                margin-bottom: 40px;
+                width: 30%;
+                padding: 20px 30px;
+                background: #eee;
+                border-radius: 10px;
+
+                &:nth-child(3n) {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    .feed-back-content {}
+
+    .feed-back-phone {
+        background: #fff;
+        padding: 20px;
+        display: flex;
+        font-size: 30px;
+        margin-top: 20px;
+
+        .feed-back-phone-label {
+            margin-right: 40px;
+        }
+
+        .feed-back-phone-input {
+            width: 70%;
+            border: none;
+            font-size: 28px;
+        }
+    }
+
+    .feed-back-commit {
+        font-size: 34px;
+        height: 80px;
+        width: 666px;
+        color: #FFFFFF;
+        text-align: center;
+        line-height: 80px;
+        border-radius: 10px;
+        margin: 60px auto;
+        letter-spacing: 20px;
+        padding-left: 20px;
+    }
+}
