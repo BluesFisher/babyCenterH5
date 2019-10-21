@@ -67,7 +67,7 @@ const FEEDBACK_TYPE: IfeedbackType[] = [
         BasePicAdd
     }
 })
-export default class AddEventLog extends Vue {
+export default class Feedback extends Vue {
     $Weui: any;
     $initWxConfig: any;
     // data

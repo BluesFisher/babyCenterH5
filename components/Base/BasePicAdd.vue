@@ -5,13 +5,13 @@
         <div class="pic-container">
             <div v-for="(item, index) in eventPic" :key="index"
                 :class="usrPicStyle ? usrPicStyle : 'pic-item'">
-                <img mode="aspectFill" :src="item" alt="" @click="() => handleShowPic(item)" />
+                <img class="pic-item-img" :src="item" alt="" @click="() => handleShowPic(item)" />
                 <img class="delete-icon" src="~/assets/images/common/delete.png"
                     @click="() => deletePic(index)" />
 
             </div>
             <div v-if="eventPic.length < 9" class="pic-item">
-                <img src="~/assets/images/common/add.png" @click="addImage" />
+                <img class="pic-item-img" src="~/assets/images/common/add.png" @click="addImage" />
             </div>
         </div>
     </div>
@@ -110,8 +110,10 @@ export default class BasePicAdd extends Vue {
                 margin-right: 0;
             }
 
-            img {
-                height: 100%;
+            .pic-item-img {
+                height: auto;
+                min-height: 100%;
+                max-height: 100%;
                 width: 100%;
             }
 
