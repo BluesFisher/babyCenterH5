@@ -1,9 +1,24 @@
 
 <template>
     <div class="musiclist-container container">
-        <audio ref="audio" src="" controls>
-            您的浏览器不支持 audio 标签。
-        </audio>
+        <audio ref="audio" src=""></audio>
+
+        <div class="play-progress" :style="{'width': playingMusic.progress}"></div>
+        <div v-if="playingMusic" class="audio-play-bottom">
+            <div class="audio-play-info">
+                <div
+                    :class="{'audio-play-img': true, 'play-img-rotate': playingMusic.icon === defaultPauseIcon}">
+                    <img :src="playingMusic.image" alt="">
+                </div>
+
+                <div class="play-info-detail">{{playingMusic.title}}-{{playingMusic.author}}</div>
+            </div>
+            <div class="audio-play-ctrl">
+                <div class="audio-control" @click="handlePlayCtrl">
+                    <img :src="playingMusic.icon || defaultPlayIcon" />
+                </div>
+            </div>
+        </div>
 
         <div v-if="audioList.length > 0" class="base-info-list-content">
             <div v-for="(item, index) in audioList" :key="index" class="list-content-item">
@@ -36,9 +51,35 @@ import dayjs from 'dayjs';
 
 import PLAY_ICON from '@/assets/images/common/play.png';
 import PAUSE_ICON from '@/assets/images/common/pause.png';
+import PLAY_CTRL_ICON from '@/assets/images/common/play-ctrl.png';
+import PAUSE_CTRL_ICON from '@/assets/images/common/pause-ctrl.png';
 import LOADING_GIF from '@/assets/images/common/loading.gif';
 
-const AUDIO_LIST = [
+interface Iaudio extends Element {
+    src: string;
+    readyState: number;
+    currentTime: number;
+    duration: number;
+    ended: boolean;
+    play: () => void;
+    pause: () => void;
+}
+
+interface IaudioListItem {
+    src: string;
+    image: string;
+    audioCtrl: string;
+    title: string;
+    author: string;
+    currentSeconds: number;
+    currentTime: string;
+    duration: string;
+    playNum: number;
+    progress: number | string;
+    icon?: string;
+}
+
+const AUDIO_LIST: IaudioListItem[] = [
     {
         src: 'http://up_mp4.t57.cn/2017/1/05m/09/298092032442.m4a',
         image:
@@ -49,6 +90,7 @@ const AUDIO_LIST = [
         currentSeconds: 0,
         currentTime: '00:00',
         duration: '',
+        progress: 0,
         playNum: 8472
     },
     {
@@ -61,6 +103,7 @@ const AUDIO_LIST = [
         currentSeconds: 0,
         currentTime: '00:00',
         duration: '',
+        progress: 0,
         playNum: 12
     },
 
@@ -74,21 +117,12 @@ const AUDIO_LIST = [
         currentSeconds: 0,
         currentTime: '00:00',
         duration: '',
+        progress: 0,
         playNum: 121
     }
 ];
 
 const HAVE_ENOUGH_DATA = 4;
-
-interface Iaudio extends Element {
-    src: string;
-    readyState: number;
-    currentTime: number;
-    duration: number;
-    ended: boolean;
-    play: () => void;
-    pause: () => void;
-}
 
 @Component({
     head() {
@@ -106,8 +140,15 @@ export default class MusicList extends Vue {
     themeColor: string = '#80d7fe';
     audioTimer: any = null;
     iconTimer: any = null;
-    audioList: any = AUDIO_LIST;
+    audioList: IaudioListItem[] = AUDIO_LIST;
     lastAudioIndex: number | null = null;
+    playingMusic: IaudioListItem = {
+        ...AUDIO_LIST[0],
+        icon: PLAY_CTRL_ICON
+    };
+    defaultPlayIcon = PLAY_CTRL_ICON;
+    defaultPauseIcon = PAUSE_CTRL_ICON;
+    currentIndex: number = 0;
 
     mounted() {
         const { query } = this.$route;
@@ -132,15 +173,19 @@ export default class MusicList extends Vue {
 
             if (readyState === HAVE_ENOUGH_DATA) {
                 this.audioList[index].audioCtrl = PAUSE_ICON;
+                this.playingMusic = {
+                    ...this.audioList[index],
+                    icon: PAUSE_CTRL_ICON
+                };
                 clearInterval(this.iconTimer);
             }
         }, 100);
     }
 
-    private calAudioTime(index, isPlay = true) {
+    private calAudioTime(index: number, isPlay = true) {
         this.audioTimer && clearInterval(this.audioTimer);
-        isPlay &&
-            (this.audioTimer = setInterval(() => {
+        if (isPlay) {
+            this.audioTimer = setInterval(() => {
                 const { currentTime, duration, ended } = this.$refs
                     .audio as Iaudio;
 
@@ -149,6 +194,10 @@ export default class MusicList extends Vue {
                     this.audioList[index].audioCtrl = PLAY_ICON;
                     this.audioList[index].currentTime = '00:00';
                     this.audioList[index].currentSeconds = 0;
+                    this.playingMusic = {
+                        ...this.audioList[index],
+                        icon: PLAY_CTRL_ICON
+                    };
                     return;
                 }
 
@@ -160,17 +209,27 @@ export default class MusicList extends Vue {
                     (this.audioList[index].duration = dayjs
                         .unix(duration + 0.5)
                         .format('mm:ss'));
-            }, 1000));
+                this.audioList[index].progress =
+                    (currentTime / duration) * 100 + '%';
+                this.playingMusic = {
+                    ...this.audioList[index],
+                    icon: PAUSE_CTRL_ICON
+                };
+            }, 1000);
+        } else {
+            this.playingMusic.icon = PLAY_CTRL_ICON;
+        }
     }
 
-    private initAudio(index, item) {
+    private initAudio(index: number, item: IaudioListItem) {
         const audioRef: Iaudio = this.$refs.audio as Iaudio;
 
         audioRef.src = item.src;
         audioRef.currentTime = this.audioList[index].currentSeconds;
     }
 
-    private handleAudioCtrl(item, index) {
+    private handleAudioCtrl(item: IaudioListItem, index: number) {
+        this.currentIndex = index;
         // 初始化音频播放
         this.initAudio(index, item);
 
@@ -203,6 +262,13 @@ export default class MusicList extends Vue {
             audioRef.pause();
             this.calAudioTime(index, false);
         }
+    }
+
+    private handlePlayCtrl() {
+        this.handleAudioCtrl(
+            this.audioList[this.currentIndex],
+            this.currentIndex
+        );
     }
 }
 </script>
