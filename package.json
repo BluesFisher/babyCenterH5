@@ -30,7 +30,7 @@
     "cross-env": "^5.2.0",
     "ioredis": "^4.14.0",
     "js-cookie": "^2.2.0",
-    "koa": "^2.6.2",
+    "koa": "^3.0.1",
     "koa-session2": "^2.2.10",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
